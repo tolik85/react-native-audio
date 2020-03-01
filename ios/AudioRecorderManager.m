@@ -78,8 +78,11 @@ RCT_EXPORT_MODULE();
 
   [self stopProgressTimer];
 
-  _progressUpdateTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(sendProgressUpdate)];
-  [_progressUpdateTimer addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+        _progressUpdateTimer = [NSTimer timerWithTimeInterval:0.5 target:self selector:@selector(sendProgressUpdate) userInfo:nil repeats:YES];
+      [[NSRunLoop mainRunLoop] addTimer:_progressUpdateTimer forMode:NSDefaultRunLoopMode];
+
+//  _progressUpdateTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(sendProgressUpdate)];
+//  [_progressUpdateTimer addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
 }
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag {
