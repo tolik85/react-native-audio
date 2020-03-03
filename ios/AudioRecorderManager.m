@@ -33,6 +33,7 @@ NSString *const AudioRecorderEventFinished = @"recordingFinished";
   BOOL _meteringEnabled;
   BOOL _measurementMode;
   BOOL _includeBase64;
+    BOOL _isRecording;
 }
 
 @synthesize bridge = _bridge;
@@ -44,7 +45,7 @@ RCT_EXPORT_MODULE();
 }
 
 - (void)sendProgressUpdate {
-  if (_audioRecorder && _audioRecorder.isRecording) {
+  if (_audioRecorder && _isRecording) {
     _currentTime = _audioRecorder.currentTime;
   } else {
     return;
@@ -257,6 +258,7 @@ RCT_EXPORT_METHOD(startRecording)
   [self startProgressTimer];
   [_recordSession setActive:YES error:nil];
   [_audioRecorder record];
+    _isRecording = YES;
 }
 
 RCT_EXPORT_METHOD(stopRecording)
@@ -264,12 +266,14 @@ RCT_EXPORT_METHOD(stopRecording)
   [_audioRecorder stop];
   [_recordSession setCategory:AVAudioSessionCategoryPlayback error:nil];
   _prevProgressUpdateTime = nil;
+    _isRecording = NO;
 }
 
 RCT_EXPORT_METHOD(pauseRecording)
 {
   if (_audioRecorder.isRecording) {
     [_audioRecorder pause];
+      _isRecording = NO;
   }
 }
 
@@ -277,6 +281,7 @@ RCT_EXPORT_METHOD(resumeRecording)
 {
   if (!_audioRecorder.isRecording) {
     [_audioRecorder record];
+      _isRecording = YES;
   }
 }
 
